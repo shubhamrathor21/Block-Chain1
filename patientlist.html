@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient List</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to bottom, #000000, #1a1a1a);
+            color: #ffffff;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: #000000;
+            padding: 10px 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .header-logo {
+            width: 50px;
+            height: 50px;
+        }
+
+        .header-text {
+            flex: 1;
+            text-align: center;
+            font-size: 22px;
+            color: #ffffff;
+            font-weight: bold;
+        }
+
+        .header-logout {
+            background-color: rgb(0, 145, 255);
+            text-align: center;
+            padding: 10px 20px;
+            border-radius: 7px;
+            margin-right: 10px;
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+        }
+
+        .container {
+            margin: 50px auto;
+            text-align: center;
+        }
+
+        .patient-list {
+            background-color: #20232a;
+            padding: 20px;
+            border-radius: 10px;
+            display: inline-block;
+            width: 60%;
+            border: 1px solid #444;
+            margin-bottom: 20px;
+        }
+
+        .patient-list p {
+            font-size: 18px;
+            margin: 10px 0;
+        }
+
+        .highlight {
+            color: #ffd700;
+            font-weight: bold;
+        }
+
+        .buttons {
+            margin-top: 20px;
+        }
+
+        .buttons button {
+            background-color: #00bfa5;
+            color: #ffffff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 0 10px;
+        }
+
+        .buttons button:hover {
+            background-color: #008f75;
+        }
+
+        .back-button {
+            margin-top: 40px;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <div class="header">
+        <img style="height: 97px; padding-top: 7px;" src="image/img13.png" alt="SEHR Logo"> <!-- Replace with your logo path -->
+        <div class="header-text"><h1 style="font-size: 40px;">Secure Electronic Health Records</h1></div>
+        <button class="header-logout"><a onclick="patientlist()">Back to dashboard</a></button>
+    </div>
+
+    <!-- Patient List Section -->
+    <div class="container">
+        <h2>Patient's List</h2>
+        <div id="patientContainer"></div>
+    </div>
+
+    <script>
+        // Example patient data array
+        const patients = [
+            { id: 1, name: 'Patient 1' },
+            { id: 2, name: 'Patient 2' },
+            { id: 3, name: 'Patient 3' }
+        ];
+
+        // Get the container element
+        const patientContainer = document.getElementById('patientContainer');
+
+        // Loop through each patient and create the HTML structure
+        patients.forEach(patient => {
+            const patientDiv = document.createElement('div');
+            patientDiv.className = 'patient-list';
+            patientDiv.innerHTML = `
+                <p><span class="highlight">Patient :</span> ${patient.id}</p>
+                <p><span class="highlight">Name :</span> ${patient.name}</p>
+                <div class="buttons">
+                    <button class="view-btn">View</button>
+                    <button class="remove-btn">Remove</button>
+                </div>
+            `;
+
+            // Add event listener to remove button
+            patientDiv.querySelector('.remove-btn').addEventListener('click', () => {
+                patientDiv.remove();
+            });
+
+            // Append the patientDiv to the container
+            patientContainer.appendChild(patientDiv);
+        });
+
+        function patientlist(){
+            window.location.href = 'doctordash.html';
+        }
+    </script>
+
+</body>
+</html>

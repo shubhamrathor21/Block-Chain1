@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Patient Profile</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to bottom, #000000, #1a1a1a);
+            color: #333;
+        }
+        header {
+            background-color: #000000;
+            color: white;
+            
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-title {
+            font-size: 1.25rem;
+            font-weight: bold;
+        }
+        .back-button {
+            background-color: #3182ce;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 0.25rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+        .back-button:hover {
+            background-color: #2c5282;
+        }
+        main {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 1rem;
+            background-color: #333;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 0.5rem;
+        }
+        h1 {
+            text-align: center;
+            color: #f1f1f1;
+            margin-bottom: 2rem;
+        }
+        .form-sections {
+            display: flex;
+            gap: 2rem;
+        }
+        .form-section {
+            flex: 1;
+        }
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            color: #ffffff;
+        }
+        .info-display {
+            padding: 0.5rem;
+            background-color: #e2e8f0;
+            border-radius: 0.25rem;
+            min-height: 1.5rem;
+        }
+        input {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #ccc;
+            border-radius: 0.25rem;
+        }
+        .form-buttons {
+            display: flex;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+        .edit-btn, .save-btn {
+            background-color: #3182ce;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 0.25rem;
+            cursor: pointer;
+            font-size: 1rem;
+            margin-right: 1rem;
+        }
+        .edit-btn:hover, .save-btn:hover {
+            background-color: #2c5282;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo"> <img style="height: 97px; padding-top: 7px;" src="image/img13.png" alt="SEHR Logo"></div>
+        <div class="header-title"><h1 style="font-size: 30px;">Secure Electronic Health Record</h1></div>
+        <button class="back-button" onclick="goBack()">
+           
+            Back to Dashboard
+        </button>
+    </header>
+    
+    <main>
+        <h1>Profile</h1>
+        <div class="form-sections">
+            <div class="form-section">
+                <div class="form-group">
+                    <label for="wallet-address">Wallet Public Address</label>
+                    <div id="wallet-address" class="info-display"></div>
+                </div>
+                <div class="form-group">
+                    <label for="full-name">Full Name</label>
+                    <div id="full-name" class="info-display"></div>
+                </div>
+                <div class="form-group">
+                    <label for="dob">Date of Birth</label>
+                    <div id="dob" class="info-display"></div>
+                </div>
+                <div class="form-group">
+                    <label for="p-gender">Gender</label>
+                    <div id="p-gender" class="info-display"></div>
+                </div>
+                <div class="form-group">
+                    <label for="p-blood">Blood Group</label>
+                    <div id="p-blood" class="info-display"></div>
+                </div>
+            </div>
+            <div class="form-section">
+                <div class="form-group">
+                    <label for="address">Home Address</label>
+                    <div id="address" class="info-display"></div>
+                </div>
+                <div class="form-group">
+                    <label for="hh-number">Mobile Number</label>
+                    <div id="hh-number" class="info-display"></div>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <div id="email" class="info-display"></div>
+                </div>
+            </div>
+        </div>
+        <div class="form-buttons">
+            <button class="edit-btn" onclick="editProfile()">Edit Profile</button>
+            <button class="save-btn" onclick="saveProfile()" style="display:none;">Save Profile</button>
+        </div>
+    </main>
+
+    <script>
+        const patientData = {
+            walletAddress: 'edit',
+            fullName: 'edit',
+            dob: 'edit',
+            gender: 'edit',
+            bloodGroup: 'edit',
+            address: 'edit',
+            hhNumber: 'edit',
+            email: 'edit'
+        };
+
+        function populateProfile() {
+            document.getElementById('wallet-address').textContent = patientData.walletAddress;
+            document.getElementById('full-name').textContent = patientData.fullName;
+            document.getElementById('dob').textContent = patientData.dob;
+            document.getElementById('p-gender').textContent = patientData.gender;
+            document.getElementById('p-blood').textContent = patientData.bloodGroup;
+            document.getElementById('address').textContent = patientData.address;
+            document.getElementById('hh-number').textContent = patientData.hhNumber;
+            document.getElementById('email').textContent = patientData.email;
+        }
+
+        window.onload = populateProfile;
+
+        function goBack() {
+            window.location.href = 'doctordash.html';
+        }
+
+        function editProfile() {
+            document.getElementById('wallet-address').innerHTML = `<input type="text" id="wallet-input" value="${patientData.walletAddress}">`;
+            document.getElementById('full-name').innerHTML = `<input type="text" id="name-input" value="${patientData.fullName}">`;
+            document.getElementById('dob').innerHTML = `<input type="date" id="dob-input" value="${patientData.dob}">`;
+            document.getElementById('p-gender').innerHTML = `<input type="text" id="gender-input" value="${patientData.gender}">`;
+            document.getElementById('p-blood').innerHTML = `<input type="text" id="blood-input" value="${patientData.bloodGroup}">`;
+            document.getElementById('address').innerHTML = `<input type="text" id="address-input" value="${patientData.address}">`;
+            document.getElementById('hh-number').innerHTML = `<input type="number" id="hh-input" value="10{patientData.hhNumber}">`;
+            document.getElementById('email').innerHTML = `<input type="email" id="email-input" value="${patientData.email}">`;
+
+            document.querySelector('.edit-btn').style.display = 'none';
+            document.querySelector('.save-btn').style.display = 'inline-block';
+        }
+
+        function saveProfile() {
+            patientData.walletAddress = document.getElementById('wallet-input').value;
+            patientData.fullName = document.getElementById('name-input').value;
+            patientData.dob = document.getElementById('dob-input').value;
+            patientData.gender = document.getElementById('gender-input').value;
+            patientData.bloodGroup = document.getElementById('blood-input').value;
+            patientData.address = document.getElementById('address-input').value;
+            patientData.hhNumber = document.getElementById('hh-input').value;
+            patientData.email = document.getElementById('email-input').value;
+
+            // Update the display with new values
+            document.getElementById('wallet-address').textContent = patientData.walletAddress;
+            document.getElementById('full-name').textContent = patientData.fullName;
+            document.getElementById('dob').textContent = patientData.dob;
+            document.getElementById('p-gender').textContent = patientData.gender;
+            document.getElementById('p-blood').textContent = patientData.bloodGroup;
+            document.getElementById('address').textContent = patientData.address;
+            document.getElementById('hh-number').textContent = patientData.hhNumber;
+            document.getElementById('email').textContent = patientData.email;
+
+            // Hide Save button and show Edit button again
+            document.querySelector('.save-btn').style.display = 'none';
+            document.querySelector('.edit-btn').style.display = 'inline-block';
+
+            console.log('Profile saved successfully');
+        }
+    </script>
+</body>
+</html>

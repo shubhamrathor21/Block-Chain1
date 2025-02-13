@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grant View Permission to the Doctor</title>
+    <style>
+        body {
+            background-color: #1f2430;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background: linear-gradient(to bottom, #000000, #1a1a1a);
+        }
+        header {
+            background-color: #000000;
+            padding: 15px 30px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+     
+        .header-title {
+            font-size: 1.25rem;
+            font-weight: bold;
+        }
+        .back-button {
+            background-color: #3182ce;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 0.25rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+        .back-button:hover {
+            background-color: #2c5282;
+        }
+        main {
+            max-width: 600px;
+            margin: 2rem auto;
+            padding: 1rem;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: antiquewhite;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        label {
+            margin-bottom: 0.5rem;
+        }
+        input {
+            padding: 0.5rem;
+            margin-bottom: 1rem;
+            background-color: #4a5568;
+            border: none;
+            border-radius: 0.25rem;
+            color: white;
+        }
+        .button-group {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+        button {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 0.25rem;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        .give-access {
+            background-color: #718096;
+            color: white;
+        }
+        .give-access:hover {
+            background-color: #4a5568;
+        }
+        .cancel {
+            background-color: #38b2ac;
+            color: white;
+        }
+        .cancel:hover {
+            background-color: #319795;
+        }
+    </style>
+</head>
+<body>
+    <header style="height: 96PX;">
+        <div class="logo">  <img style="height: 97px; margin-left: -20px;" src="image/img13.png" alt="SEHR Logo"></div>
+        <div class="header-title"><h1 style="font-size: 30px;">Secure Electronic Health Record</h1></div>
+        <button class="back-button" onclick="goBack()">
+            Back to Dashboard
+        </button>
+    </header>
+    
+    <main style="background-color: #333; height: 250px; width: 590px; border-radius: 10px; margin-top: 7%;">
+        <h1 style="font-size: 25px;">Grant View Permission to the Doctor</h1>
+        <form id="permissionForm">
+            <label for="doctorHHNumber" style="color: aliceblue;">Doctor Wallet Address:</label>
+            <input type="text" id="doctorHHNumber" required>
+            <div class="button-group">
+                <button type="submit" class="give-access">Give Access</button>
+                <button type="button" class="cancel" onclick="cancelAction()">Cancel</button>
+            </div>
+        </form>
+    </main>
+
+    <script>
+        // Function to simulate a valid HH number check and grant access
+        function isValidHHNumber(hhNumber) {
+            // Simulate a list of valid HH numbers for doctors
+            const validHHNumbers = ['HH12345', 'HH54321', 'HH67890'];
+            return validHHNumbers.includes(hhNumber);
+        }
+
+        function goBack() {
+            // Logic to go back to the patient dashboard
+            window.location.href = 'patientdash.html';
+        }
+
+        function cancelAction() {
+            // Logic for cancel action
+            console.log('Action cancelled');
+        }
+
+        document.getElementById('permissionForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const doctorHHNumber = document.getElementById('doctorHHNumber').value;
+
+            // Check if the entered HH number is valid
+            if (isValidHHNumber(doctorHHNumber)) {
+                console.log('Granting access to doctor with HH Number:', doctorHHNumber);
+
+                // Simulate adding the patient's profile to the doctor's list
+                // In real scenario, send data to backend and redirect upon success
+                alert(`Access granted to Doctor with HH Number: ${doctorHHNumber}`);
+
+                // Redirect to the doctor's patient list or some confirmation page
+                window.location.href = 'doctorsPatientsList.html'; // Simulate redirection
+            } else {
+                // If HH number is invalid, show an alert or error
+                alert('Invalid HH Number. Please try again.');
+            }
+        });
+    </script>
+</body>
+</html>

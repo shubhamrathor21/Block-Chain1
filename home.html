@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Secure Electronic Health Records</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header style="height: 100px;" >
+        <div class="logo">
+            <img  style="height: 97px; margin-left: -20px; padding-top: 7px ;" src="image/img13.png" alt="SEHR Logo">
+        </div>
+        <h1 style="font-size: 30px ;">Secure Electronic Health Records<hr ><hr style="padding-top: 2px;">  </h1>
+        <div class="tabs">
+            <button class="tab-button " onclick="redirectTo('Login.html')">
+                <span>Login</span>
+            </button>
+            <button class="tab-button" onclick="redirectTo('Registration.html')">
+                <span>Register</span>
+            </button>
+        </div>
+        <style>
+            * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+ 
+    background-color: #1a1a1a;
+    color: #fff;
+background-attachment: fixed;
+background-position: 100%;
+}
+.tabs {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .tab-button:hover {
+            background-color: #00adb5;
+        }
+
+      
+
+        
+        .tab-button {
+            border: none;
+            background-color: #0f3460;
+            color: #fff;
+            cursor: pointer;
+            padding: 10px 20px;
+            position: relative;
+            transform: skew(-20deg); /* Parallelogram effect */
+        }
+        .tab-button span {
+            display: inline-block;
+            
+        }
+        .tab-button:not(:last-child) {
+            border-right: 2px solid white;
+        }
+        .tab-button:not(:last-child){
+            border-top-left-radius: 10px;
+        }
+        .tab-button:last-child{
+            border-bottom-right-radius: 10px;
+        }
+
+header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px;
+    background-color: #000000;
+}
+
+
+header h1 {
+    font-size: 24px;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+}
+
+nav a {
+    color: #616bfb;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+nav a:hover {
+    color: #fff;
+}
+
+.hero {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    padding: 100px;
+    background: linear-gradient(to bottom, #000000, #1a1a1a);
+    background-size: 100%;
+    background-repeat: no-repeat;
+   
+}
+
+.hero img {
+    width: 45%;
+    border-radius: 10px;
+}
+
+.hero .content {
+    max-width: 50%;
+    text-align: justify;
+}
+
+.hero h2 {
+    font-size: 28px;
+    margin-bottom: 20px;
+    color: #61dafb;
+    padding-left: 50px;
+}
+
+.hero p {
+    font-size: 16px;
+    line-height: 1.6;
+    padding-left: 50px;
+}
+
+@media (max-width: 768px) {
+                .hero {
+                    flex-direction: column;
+                    text-align: center;
+                }
+
+                .hero .content {
+                    max-width: 100%;
+                }
+
+                header h1 {
+                    font-size: 24px;
+                }
+
+                nav a {
+                    font-size: 16px;
+                }
+
+                .hero h2, .hero p {
+                    padding-left: 0;
+                }
+            }
+
+        </style>
+        <script>
+            function redirectTo(page) {
+                document.body.style.cursor = 'wait';
+                window.location.href = page;
+            }
+            </script>
+            
+    </header>
+
+    <main>
+        <section class="hero">
+            <img  style="height: 50%; width: 60%; " src="image/img8.png" alt="Healthcare professionals using technology">
+            <div class="content">
+                <h2>The Secure Electronic Health Records App</h2>
+                <p>
+                    The Secure Electronic Health Records App is revolutionizing EHR management by leveraging blockchain technology. 
+                    Utilizing key components such as blockchain for secure and transparent data storage, Ganache for rapid development, 
+                    Metamask for seamless blockchain interaction, and IPFS desktop for decentralized file storage, 
+                    it ensures enhanced security, improved accessibility, data interoperability, and trust. 
+                    By adopting this innovative approach, it aims to transform healthcare data management, 
+                    leading to better patient outcomes and improved healthcare delivery.
+                </p>
+            </div>
+        </section>
+    </main>
+
+   
+
+</body>
+</html>

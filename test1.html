@@ -1,0 +1,600 @@
+from flask import Flask, request, jsonify
+from web3 import Web3
+import ipfsapi  # Version 0.32.1 uses ipfsapi, not ipfshttpclient
+import json
+import os
+import hashlib
+
+app = Flask(__name__)
+
+# Connect to Ethereum Blockchain
+blockchain_url = "http://127.0.0.1:7545"  # Ensure this is the correct Ganache URL
+web3 = Web3(Web3.HTTPProvider(blockchain_url))
+
+# Check blockchain connection
+if web3.is_connected():
+    print("Connected to Blockchain!")
+else:
+    raise ConnectionError("Blockchain connection failed! Please check your Ganache setup.")
+
+# Connect to IPFS
+try:
+    ipfs_client = ipfsapi.Client("127.0.0.1", 5001)  # Using ipfsapi for version 0.32.1
+    print("Connected to IPFS!")
+except Exception as e:
+    raise ConnectionError(f"Failed to connect to IPFS: {e}")
+
+# Smart Contract Details
+contract_address = "0xd9145CCE52D386f254917e481eB44e9943F39138"  # Replace with your deployed contract address
+contract_abi =[
+	{
+		"anonymous": False,
+		"inputs": [
+			{
+				"indexed": True,
+				"internalType": "address",
+				"name": "walletAddress",
+				"type": "address"
+			},
+			{
+				"indexed": False,
+				"internalType": "string",
+				"name": "centerName",
+				"type": "string"
+			}
+		],
+		"name": "DiagnosticRegistered",
+		"type": "event"
+	},
+	{
+		"anonymous": False,
+		"inputs": [
+			{
+				"indexed": True,
+				"internalType": "address",
+				"name": "walletAddress",
+				"type": "address"
+			},
+			{
+				"indexed": False,
+				"internalType": "string",
+				"name": "fullName",
+				"type": "string"
+			}
+		],
+		"name": "DoctorRegistered",
+		"type": "event"
+	},
+	{
+		"anonymous": False,
+		"inputs": [
+			{
+				"indexed": True,
+				"internalType": "address",
+				"name": "walletAddress",
+				"type": "address"
+			},
+			{
+				"indexed": False,
+				"internalType": "string",
+				"name": "fullName",
+				"type": "string"
+			}
+		],
+		"name": "PatientRegistered",
+		"type": "event"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"name": "diagnosticCenters",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "walletAddress",
+				"type": "address"
+			},
+			{
+				"internalType": "string",
+				"name": "centerName",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "hospitalName",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "hhNumber",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "licenseNumber",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "addressLocation",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "email",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "phone",
+				"type": "string"
+			},
+			{
+				"internalType": "bytes32",
+				"name": "passwordHash",
+				"type": "bytes32"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"name": "doctors",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "walletAddress",
+				"type": "address"
+			},
+			{
+				"internalType": "string",
+				"name": "fullName",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "specialty",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "licenseNumber",
+				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "yearsOfExperience",
+				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "hospitalName",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "hospitalLocation",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "gender",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "consultationMethod",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "email",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "phone",
+				"type": "string"
+			},
+			{
+				"internalType": "bytes32",
+				"name": "passwordHash",
+				"type": "bytes32"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_user",
+				"type": "address"
+			}
+		],
+		"name": "isRegistered",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"name": "patients",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "walletAddress",
+				"type": "address"
+			},
+			{
+				"internalType": "string",
+				"name": "fullName",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "dateOfBirth",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "gender",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "bloodGroup",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "homeAddress",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "email",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "hhNumber",
+				"type": "string"
+			},
+			{
+				"internalType": "bytes32",
+				"name": "passwordHash",
+				"type": "bytes32"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_centerName",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_hospitalName",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_hhNumber",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_licenseNumber",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_addressLocation",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_email",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_phone",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_password",
+				"type": "string"
+			}
+		],
+		"name": "registerDiagnosticCenter",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_fullName",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_specialty",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_licenseNumber",
+				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_yearsOfExperience",
+				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "_hospitalName",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_hospitalLocation",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_gender",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_consultationMethod",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_email",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_phone",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_password",
+				"type": "string"
+			}
+		],
+		"name": "registerDoctor",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_fullName",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_dateOfBirth",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_gender",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_bloodGroup",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_homeAddress",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_email",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_hhNumber",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_password",
+				"type": "string"
+			}
+		],
+		"name": "registerPatient",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"name": "registered",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	}
+]
+
+# Initialize the contract
+try:
+    contract = web3.eth.contract(address=contract_address, abi=contract_abi)
+except Exception as e:
+    raise ValueError(f"Error initializing the smart contract: {e}")
+
+def hash_password(password):
+    """Hash password using SHA-256"""
+    return hashlib.sha256(password.encode()).hexdigest()
+
+@app.route("/register", methods=["POST"])
+def register():
+    try:
+        # Get data from the frontend
+        data = request.json
+        role = data.get("role")
+        user_data = data.get("data")
+
+        if not role or not user_data:
+            return jsonify({"error": "Missing 'role' or 'data' in request"}), 400
+
+        # Get the first account as sender
+        account = web3.eth.accounts[0]
+        
+        # Hash the password
+        user_data['password'] = hash_password(user_data.get('password', ''))
+
+        # Prepare and execute registration based on role
+        if role == "patient":
+            tx = contract.functions.registerPatient(
+                user_data['fullName'],
+                user_data['dateOfBirth'],
+                user_data['gender'],
+                user_data['bloodGroup'],
+                user_data['homeAddress'],
+                user_data['email'],
+                user_data['hhNumber'],
+                user_data['password']
+            ).buildTransaction({
+                "from": account,
+                "nonce": web3.eth.get_transaction_count(account),
+                "gas": 2000000,
+                "gasPrice": web3.to_wei("50", "gwei"),
+            })
+        elif role == "doctor":
+            tx = contract.functions.registerDoctor(
+                user_data['fullName'],
+                user_data['specialty'],
+                user_data['licenseNumber'],
+                user_data['yearsOfExperience'],
+                user_data['hospitalName'],
+                user_data['hospitalLocation'],
+                user_data['gender'],
+                user_data['consultationMethod'],
+                user_data['email'],
+                user_data['phone'],
+                user_data['password']
+            ).buildTransaction({
+                "from": account,
+                "nonce": web3.eth.get_transaction_count(account),
+                "gas": 2000000,
+                "gasPrice": web3.to_wei("50", "gwei"),
+            })
+        elif role == "diagnostic":
+            tx = contract.functions.registerDiagnosticCenter(
+                user_data['centerName'],
+                user_data['hospitalName'],
+                user_data['hhNumber'],
+                user_data['licenseNumber'],
+                user_data['addressLocation'],
+                user_data['email'],
+                user_data['phone'],
+                user_data['password']
+            ).buildTransaction({
+                "from": account,
+                "nonce": web3.eth.get_transaction_count(account),
+                "gas": 2000000,
+                "gasPrice": web3.to_wei("50", "gwei"),
+            })
+        else:
+            return jsonify({"error": "Invalid role"}), 400
+
+        # Sign and send the transaction
+        private_key = os.getenv("PRIVATE_KEY")  # Retrieve the private key from environment variables
+        if not private_key:
+            raise EnvironmentError("Private key not set in environment variables.")
+
+        signed_tx = web3.eth.account.sign_transaction(tx, private_key=private_key)
+        tx_hash = web3.eth.send_raw_transaction(signed_tx.rawTransaction)
+
+        # Optional: Store additional data in IPFS if needed
+        try:
+            ipfs_hash = ipfs_client.add_json(user_data)
+        except Exception as e:
+            ipfs_hash = "IPFS storage failed: " + str(e)
+
+        # Return success response
+        return jsonify({
+            "message": f"{role} registered successfully!",
+            "ipfs_hash": ipfs_hash,
+            "blockchain_tx": tx_hash.hex(),
+        })
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route("/get-data", methods=["GET"])
+def get_data():
+    try:
+        ipfs_hash = request.args.get("ipfs_hash")
+        if not ipfs_hash:
+            return jsonify({"error": "IPFS hash is required"}), 400
+
+        # Fetch the data from IPFS
+        ipfs_data = ipfs_client.cat(ipfs_hash).decode("utf-8")
+
+        return jsonify({"data": json.loads(ipfs_data)})
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+if __name__ == "_main_":
+    app.run(debug=True)

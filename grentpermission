@@ -1,0 +1,32 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract PermissionControl {
+    // Mapping to store permissions: Patient address -> (Doctor address -> Permission status)
+    mapping(address => mapping(address => bool)) private permissions;
+
+    // Event for granting access
+    event AccessGranted(address indexed patient, address indexed doctor);
+
+    // Event for revoking access
+    event AccessRevoked(address indexed patient, address indexed doctor);
+
+    // Grant permission to a doctor
+    function grantPermission(address doctor) external {
+        require(doctor != address(0), "Invalid doctor address");
+        permissions[msg.sender][doctor] = true; // Grant permission
+        emit AccessGranted(msg.sender, doctor);
+    }
+
+    // Revoke permission from a doctor
+    function revokePermission(address doctor) external {
+        require(permissions[msg.sender][doctor], "Permission not granted");
+        permissions[msg.sender][doctor] = false; // Revoke permission
+        emit AccessRevoked(msg.sender, doctor);
+    }
+
+    // Check if a doctor has permission
+    function hasPermission(address patient, address doctor) external view returns (bool) {
+        return permissions[patient][doctor];
+    }
+}

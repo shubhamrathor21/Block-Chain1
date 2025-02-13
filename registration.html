@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration Portal</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1, h2 {
+            text-align: center;
+        }
+
+        form {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            padding: 10px;
+            width: 100%;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Registration Portal</h1>
+
+        <!-- Patient Registration Form -->
+        <form id="patient-form">
+            <h2>Patient Registration</h2>
+            <label for="patient-wallet-address">Wallet Address:</label>
+            <input type="text" id="patient-wallet-address" required>
+
+            <label for="patient-full-name">Full Name:</label>
+            <input type="text" id="patient-full-name" required>
+
+            <label for="patient-dob">Date of Birth:</label>
+            <input type="date" id="patient-dob" required>
+
+            <label for="patient-gender">Gender:</label>
+            <select id="patient-gender" required>
+                <option value="">Select</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="other">Other</option>
+            </select>
+
+            <label for="patient-blood-group">Blood Group:</label>
+            <select id="patient-blood-group" required>
+                <option value="">Select</option>
+                <option value="A+">A+</option>
+                <option value="B+">B+</option>
+                <option value="O+">O+</option>
+                <option value="AB+">AB+</option>
+            </select>
+
+            <label for="patient-address">Address:</label>
+            <input type="text" id="patient-address" required>
+
+            <label for="patient-email">Email:</label>
+            <input type="email" id="patient-email" required>
+
+            <label for="patient-password">Password:</label>
+            <input type="password" id="patient-password" required>
+
+            <label for="patient-confirm-password">Confirm Password:</label>
+            <input type="password" id="patient-confirm-password" required>
+
+            <button type="submit">Register</button>
+        </form>
+
+        <!-- Doctor Registration Form -->
+        <form id="doctor-form">
+            <h2>Doctor Registration</h2>
+            <label for="doctor-wallet-address">Wallet Address:</label>
+            <input type="text" id="doctor-wallet-address" required>
+
+            <label for="doctor-full-name">Full Name:</label>
+            <input type="text" id="doctor-full-name" required>
+
+            <label for="doctor-specialization">Specialization:</label>
+            <input type="text" id="doctor-specialization" required>
+
+            <label for="doctor-license-number">License Number:</label>
+            <input type="text" id="doctor-license-number" required>
+
+            <label for="doctor-hospital-affiliation">Hospital Affiliation:</label>
+            <input type="text" id="doctor-hospital-affiliation" required>
+
+            <label for="doctor-email">Email:</label>
+            <input type="email" id="doctor-email" required>
+
+            <label for="doctor-phone">Phone Number:</label>
+            <input type="text" id="doctor-phone" required>
+
+            <label for="doctor-experience">Years of Experience:</label>
+            <input type="number" id="doctor-experience" required>
+
+            <label for="doctor-password">Password:</label>
+            <input type="password" id="doctor-password" required>
+
+            <label for="doctor-confirm-password">Confirm Password:</label>
+            <input type="password" id="doctor-confirm-password" required>
+
+            <button type="submit">Register</button>
+        </form>
+
+        <!-- Diagnostic Center Registration Form -->
+        <form id="diagnostic-form">
+            <h2>Diagnostic Center Registration</h2>
+            <label for="diagnostic-wallet-address">Wallet Address:</label>
+            <input type="text" id="diagnostic-wallet-address" required>
+
+            <label for="diagnostic-center-name">Center Name:</label>
+            <input type="text" id="diagnostic-center-name" required>
+
+            <label for="diagnostic-license-number">License Number:</label>
+            <input type="text" id="diagnostic-license-number" required>
+
+            <label for="diagnostic-contact-info">Contact Info:</label>
+            <input type="text" id="diagnostic-contact-info" required>
+
+            <label for="diagnostic-email">Email:</label>
+            <input type="email" id="diagnostic-email" required>
+
+            <label for="diagnostic-address">Address:</label>
+            <input type="text" id="diagnostic-address" required>
+
+            <label for="diagnostic-password">Password:</label>
+            <input type="password" id="diagnostic-password" required>
+
+            <label for="diagnostic-confirm-password">Confirm Password:</label>
+            <input type="password" id="diagnostic-confirm-password" required>
+
+            <button type="submit">Register</button>
+        </form>
+    </div>
+
+    <script>
+        const CONTRACT_ADDRESS = "0x870f80823772b3Ef098844A852dDfBeec1061776"; // Replace with your contract address
+        const CONTRACT_ABI = [
+        {
+            "anonymous": false,
+            "inputs": [
+                {
+                    "indexed": true,
+                    "internalType": "address",
+                    "name": "user",
+                    "type": "address"
+                },
+                {
+                    "indexed": false,
+                    "internalType": "string",
+                    "name": "ipfsHash",
+                    "type": "string"
+                }
+            ],
+            "name": "HashStored",
+            "type": "event"
+        },
+        {
+            "inputs": [],
+            "name": "getHash",
+            "outputs": [
+                {
+                    "internalType": "string",
+                    "name": "",
+                    "type": "string"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "string",
+                    "name": "_ipfsHash",
+                    "type": "string"
+                }
+            ],
+            "name": "storeHash",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        }
+    ]
+    ;
+
+        async function register(endpoint, data) {
+            try {
+                const response = await fetch(`http://127.0.0.1:5000${endpoint}`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+                if (response.ok) {
+                    alert(`Registration successful! IPFS Hash: ${result.ipfsHash}`);
+                } else {
+                    alert(`Error: ${result.error}`);
+                }
+            } catch (error) {
+                console.error("Error registering user:", error);
+                alert("Failed to register user. Check console for details.");
+            }
+        }
+
+        document.getElementById("patient-form").addEventListener("submit", function(event) {
+            event.preventDefault();
+            const data = {
+                walletAddress: document.getElementById("patient-wallet-address").value,
+                fullName: document.getElementById("patient-full-name").value,
+                dob: document.getElementById("patient-dob").value,
+                gender: document.getElementById("patient-gender").value,
+                bloodGroup: document.getElementById("patient-blood-group").value,
+                address: document.getElementById("patient-address").value,
+                email: document.getElementById("patient-email").value,
+                password: document.getElementById("patient-password").value,
+                confirmPassword: document.getElementById("patient-confirm-password").value
+            };
+            register("/register/patient", data);
+        });
+
+        document.getElementById("doctor-form").addEventListener("submit", function(event) {
+            event.preventDefault();
+            const data = {
+                walletAddress: document.getElementById("doctor-wallet-address").value,
+                fullName: document.getElementById("doctor-full-name").value,
+                specialization: document.getElementById("doctor-specialization").value,
+                licenseNumber: document.getElementById("doctor-license-number").value,
+                hospitalAffiliation: document.getElementById("doctor-hospital-affiliation").value,
+                email: document.getElementById("doctor-email").value,
+                phone: document.getElementById("doctor-phone").value,
+                experience: document.getElementById("doctor-experience").value,
+                password: document.getElementById("doctor-password").value,
+                confirmPassword: document.getElementById("doctor-confirm-password").value
+            };
+            register("/register/doctor", data);
+        });
+
+        document.getElementById("diagnostic-form").addEventListener("submit", function(event) {
+            event.preventDefault();
+            const data = {
+                walletAddress: document.getElementById("diagnostic-wallet-address").value,
+                centerName: document.getElementById("diagnostic-center-name").value,
+                licenseNumber: document.getElementById("diagnostic-license-number").value,
+                contactInfo: document.getElementById("diagnostic-contact-info").value,
+                email: document.getElementById("diagnostic-email").value,
+                address: document.getElementById("diagnostic-address").value,
+                password: document.getElementById("diagnostic-password").value,
+                confirmPassword: document.getElementById("diagnostic-confirm-password").value
+            };
+            register("/register/diagnostic", data);
+        });
+    </script>
+</body>
+</html>

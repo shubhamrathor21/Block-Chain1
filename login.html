@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Electronic Health Records - Login</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 50px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .register-link {
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .register-link a {
+            color: #4CAF50;
+            text-decoration: none;
+        }
+
+        .register-link a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Login</h1>
+        <form id="login-form">
+            <label for="walletAddress">Wallet Address:</label>
+            <input type="text" id="walletAddress" placeholder="Enter your wallet address" required>
+
+            <label for="password">Password:</label>
+            <input type="password" id="password" placeholder="Enter your password" required>
+
+            <button type="submit">Login</button>
+        </form>
+        <div class="register-link">
+            <p>Don't have an account? <a href="registration.html">Register here</a></p>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/web3@1.7.5/dist/web3.min.js"></script>
+
+<script>
+    let contract;
+    let web3;
+
+    // Initialize Web3 and contract details
+    async function initBlockchain() {
+        if (typeof window.ethereum !== "undefined") {
+            try {
+                // Request MetaMask connection
+                await window.ethereum.request({ method: "eth_requestAccounts" });
+
+                // Create Web3 instance
+                web3 = new Web3(window.ethereum);
+
+                // Set Contract ABI and Address
+                const contractABI = [
+                {
+                    "inputs": [
+                        {
+                            "internalType": "string",
+                            "name": "ipfsHash",
+                            "type": "string"
+                        }
+                    ],
+                    "name": "register",
+                    "outputs": [],
+                    "stateMutability": "nonpayable",
+                    "type": "function"
+                },
+                {
+                    "anonymous": false,
+                    "inputs": [
+                        {
+                            "indexed": true,
+                            "internalType": "address",
+                            "name": "user",
+                            "type": "address"
+                        },
+                        {
+                            "indexed": false,
+                            "internalType": "string",
+                            "name": "ipfsHash",
+                            "type": "string"
+                        }
+                    ],
+                    "name": "UserRegistered",
+                    "type": "event"
+                },
+                {
+                    "inputs": [
+                        {
+                            "internalType": "address",
+                            "name": "userAddress",
+                            "type": "address"
+                        }
+                    ],
+                    "name": "getIPFSHash",
+                    "outputs": [
+                        {
+                            "internalType": "string",
+                            "name": "",
+                            "type": "string"
+                        }
+                    ],
+                    "stateMutability": "view",
+                    "type": "function"
+                }
+            ]
+                const contractAddress = "0x2A778f111db48Ff42c243076d09a0966F65ADB17"; // Replace with your contract address
+
+                // Initialize contract
+                contract = new web3.eth.Contract(contractABI, contractAddress);
+                console.log("Contract initialized:", contract);
+
+            } catch (error) {
+                console.error("MetaMask connection failed:", error);
+                alert("Failed to connect to MetaMask. Ensure it's installed and connected.");
+            }
+        } else {
+            alert("MetaMask is not installed. Please install MetaMask to continue.");
+        }
+    }
+
+    // Login Function
+    async function login() {
+        const walletAddress = document.getElementById("walletAddress").value;
+        const password = document.getElementById("password").value;
+
+        if (!web3 || !contract) {
+            alert("Blockchain connection not initialized. Please refresh the page.");
+            return;
+        }
+
+        try {
+            // Get IPFS hash from the blockchain
+            const ipfsHash = await contract.methods.getIPFSHash(walletAddress).call();
+
+            // Send login request to backend
+            const response = await fetch("http://127.0.0.1:5000/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ walletAddress, password, ipfsHash }),
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                alert("Login successful!");
+                console.log("User Data:", result.userData);
+            } else {
+                alert(result.error || "Login failed");
+            }
+        } catch (error) {
+            console.error("Login error:", error);
+            alert("Login failed. Check console for details.");
+        }
+    }
+
+    // Initialize Blockchain on page load
+    window.addEventListener("load", initBlockchain);
+</script>
+
+</body>
+</html>

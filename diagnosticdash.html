@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Dashboard</title>
+    <style>
+        /* ... (keep all your existing styles) ... */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to bottom, #000000, #1a1a1a);
+            color: white;
+            text-align: center;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+    
+        }
+
+        .header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #000;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .header img {
+            height: 50px;
+        }
+
+        .header .logout {
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+           
+        }
+
+        .dashboard {
+            margin-top: 100px;
+           
+        }
+
+        .dashboard h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .dashboard p {
+            font-size: 1.2rem;
+            margin-bottom: 40px;
+        }
+
+        .dashboard p span {
+            color: #f8d80e;
+            font-weight: bold;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .button-container a {
+            background-color: #1bc7b1;
+            color: white;
+            text-decoration: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        .button-container a:hover {
+            background-color: #17a498;
+            transform: translateY(-3px);
+        }
+
+        .button-container a:active {
+            transform: translateY(0);
+        }
+        .logout{
+            background-color: rgb(0, 145, 255);
+         
+            text-align: center;
+            padding : 10px 20px;
+            margin-top: -20px;
+            border-radius: 7px;
+            margin-right: 10px;
+        }
+
+        /* Add styles for the popup */
+        .popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #333;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            display: none;
+        }
+
+        .popup-content {
+            color: white;
+            font-size: 18px;
+            margin-bottom: 15px;
+        }
+
+        .popup-button {
+            background-color: #1bc7b1;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .popup-button:hover {
+            background-color: #17a498;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <img style="height: 97px; margin-left: 10px; margin-top: -7px;" src="/image/img13.png" alt="Logo">
+        <div class="header-title">
+            <h1>Secure Electronic Health Records</h1>
+           
+        </div>
+        <a href="#" class="logout" onclick="showLogoutPopup()">Logout</a>
+    </div>
+
+    <div class="dashboard">
+        <h1>Diagnostic Dashboard</h1>
+        <p>Welcome <span></span></p>
+
+        <div class="button-container">
+            <a href="#" onclick="viewprofile()">View Profile</a>
+            <a href="#" onclick="viewpatientrecord()">Create Record</a>
+           
+        </div>
+    </div>
+
+    <!-- Logout Popup -->
+    <div id="logoutPopup" class="popup">
+        <div class="popup-content">
+            You have successfully logged out!
+        </div>
+        <button class="popup-button" onclick="redirectToLogin()">OK</button>
+    </div>
+
+    <script>
+        function showLogoutPopup() {
+            document.getElementById('logoutPopup').style.display = 'block';
+        }
+
+        function redirectToLogin() {
+            // Redirect to login page
+            window.location.href = 'login.html'; // Replace with your login page URL
+        }
+
+function viewpatientrecord() {
+    // Redirect to the upload past records page
+    window.location.href = 'createlab.html'; // Replace with the correct path to your upload page
+}
+function viewprofile() {
+    // Redirect to the upload past records page
+    window.location.href = 'viewprofile2.html'; // Replace with the correct path to your upload page
+}
+
+
+    </script>
+</body>
+</html>
